@@ -69,7 +69,7 @@
       {
         "system": false,
         "id": "qnzfxoqe",
-        "name": "field",
+        "name": "owner",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -85,7 +85,7 @@
       {
         "system": false,
         "id": "mrxqxprt",
-        "name": "field2",
+        "name": "file",
         "type": "file",
         "required": true,
         "presentable": false,
@@ -108,11 +108,11 @@
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
     "options": {}
   }
 ]
