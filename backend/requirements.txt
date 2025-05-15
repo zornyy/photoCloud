@@ -1,0 +1,14 @@
+fastapi[standard]
+uvicorn[standard]
+sqlalchemy
+pydantic
+pymysql
+python-dotenv
+watchdog
+pyjwt
+aiomysql
+databases
+cryptography
+pydantic-settings
+bcrypt
+alembic
