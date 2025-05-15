@@ -1,24 +1,46 @@
-from typing import Union
-from fastapi import FastAPI
-from db.database import async_engine, Base
-from api import users, photos
+from fastapi import FastAPI, Depends, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 
-app = FastAPI()
+from core.config import settings
+from db.database import engine, Base
+from api.endpoints import auth, users, photos
 
-@app.on_event("startup") # Code to execute on startup
-async def startup():
-    async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+# Create FastAPI app
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+)
 
-@app.on_event("shutdown")
-async def shutdown():
-    # Close the database connection pool
-    await async_engine.dispose()
+# Set up CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/health")
-def healthcheck():
-    return {"Message": "API running properly"}
+# Create API router
+api_router = APIRouter()
 
-app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(photos.router, prefix="/photos", tags=["Photos"])
+# Include routers
+api_router.include_router(auth.router)
+api_router.include_router(users.router)
+api_router.include_router(photos.router)
 
+# Mount API router
+app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# Mount uploads directory for serving photos
+UPLOAD_DIR = os.path.join(os.getcwd(), "uploads")
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+
+@app.get("/")
+def root():
+    return {"message": f"Welcome to {settings.PROJECT_NAME}!"}

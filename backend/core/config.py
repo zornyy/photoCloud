@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     
     # Authentication
     JWT_SECRET_KEY: str
+    ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_HOURS: int = 6
     
     # Database
@@ -18,6 +19,9 @@ class Settings(BaseSettings):
     MYSQL_HOST: str
     MYSQL_PORT: str
     
+    # Uploads
+    UPLOAD_DIR: str = "/uploads"
+
     # CORS Configuration
     CORS_ORIGINS: List[str] = [
         "http://localhost",
